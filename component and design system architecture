@@ -1,0 +1,194 @@
+1. Design system is infrastructure, not feature code
+
+Treat ui/ as a product, not a dump.
+
+No feature-specific logic inside design system components.
+
+If a component depends on business rules, it does not belong in ui/.
+
+Rule:
+
+UI components must be domain-agnostic unless explicitly marked as organisms.
+
+2. Enforce Atomic Design boundaries
+
+atoms must never import from molecules, organisms, or templates
+
+molecules may import only from atoms
+
+organisms may import from atoms and molecules
+
+templates may import only from organisms
+
+pages compose templates, never the other way around
+
+Rule:
+
+No upward imports across atomic layers. Violations are architectural bugs.
+
+3. Atoms are pure and stupid (by design)
+
+Atoms must:
+
+Have no layout responsibility
+
+Have no business logic
+
+Have no data fetching
+
+Avoid conditional rendering based on app state
+
+Rule:
+
+If an atom needs to know where it is used, it is not an atom.
+
+4. Composition over prop explosion
+
+Avoid boolean flags like isPrimary, withIcon, hasBorder
+
+Prefer slot-based APIs and child composition
+
+Allowed
+
+<Card>
+  <Card.Header />
+  <Card.Body />
+</Card>
+
+
+Forbidden
+
+<Card hasHeader hasBorder hasShadow align="center" />
+
+
+Rule:
+
+If props are predicting future variants, stop and redesign with composition.
+
+5. No hardcoded visual values
+
+No raw colors, spacing, or font sizes in components
+
+All visual values must come from design tokens
+
+Forbidden
+
+color: #2563eb;
+margin: 12px;
+
+
+Allowed
+
+color: var(--color-accent);
+margin: var(--space-3);
+
+
+Rule:
+
+Hardcoded styles are technical debt, not shortcuts.
+
+6. Design tokens are the single source of truth
+
+Tokens live in ui/tokens
+
+Components consume semantic tokens, not primitive ones
+
+Tokens must not import application code
+
+Rule:
+
+Components adapt to tokens. Tokens never adapt to components.
+
+7. Headless-first interaction patterns
+
+Complex interactions must use headless primitives or wrappers
+
+Accessibility logic must not be reimplemented per component
+
+Styling is layered on top, never mixed into logic
+
+Rule:
+
+Accessibility is a foundation, not an optional enhancement.
+
+8. No layout assumptions in reusable components
+
+Components must not assume page width, grid, or positioning
+
+Layout belongs to templates and pages
+
+Rule:
+
+Components define behavior and appearance, not placement.
+
+9. Templates define structure, not content
+
+Templates accept components as slots
+
+Templates do not fetch data
+
+Templates do not contain business logic
+
+Rule:
+
+Templates answer “where”, pages answer “what”.
+
+10. Predictable exports only
+
+Each component folder exposes a single public API via index.ts
+
+No deep imports across component internals
+
+Forbidden
+
+import { ButtonBase } from '@/ui/atoms/Button/internal'
+
+
+Allowed
+
+import { Button } from '@/ui/atoms'
+
+
+Rule:
+
+If it’s not exported, it doesn’t exist.
+
+11. Backward compatibility over cleverness
+
+Breaking component APIs requires strong justification
+
+Prefer additive changes via composition
+
+Rule:
+
+Stability beats elegance in shared UI infrastructure.
+
+12. Performance is a design-system responsibility
+
+Avoid unnecessary wrapper components
+
+Avoid deep render trees
+
+Measure impact on CLS and INP for shared components
+
+Rule:
+
+If the design system is slow, the entire app is slow.
+
+13. Documentation is mandatory, not optional
+
+Every public component must document:
+
+Responsibility
+
+Composition pattern
+
+Usage constraints
+
+Rule:
+
+Undocumented components are unofficial components.
+
+Final principle (the one that matters)
+
+The design system exists to reduce decisions, not showcase creativity.
